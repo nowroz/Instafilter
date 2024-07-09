@@ -71,21 +71,20 @@ struct ContentView: View {
         }
     }
     
-    @MainActor func changeFilter() {
+    func changeFilter() {
         showingConfirmationDialog = true
-        
-        guard processedImage != nil else { return }
-        
-        changeFilterTapCount += 1
-        if changeFilterTapCount > 20 {
-            requestReview()
-        }
     }
     
-    func setFilter(_ filter: CIFilter) {
+    @MainActor func setFilter(_ filter: CIFilter) {
         guard photosPickerItem != nil else { return }
         currentFilter = filter
         loadImage()
+        
+        changeFilterTapCount += 1
+        
+        if changeFilterTapCount > 20 {
+            requestReview()
+        }
     }
     
     func loadImage() {
@@ -112,7 +111,7 @@ struct ContentView: View {
         }
     }
     
-    @MainActor func setFilterValues() {
+    func setFilterValues() {
         if currentFilter.inputKeys.contains(kCIInputIntensityKey) {
             currentFilter.setValue(intensity, forKey: kCIInputIntensityKey)
         }
@@ -124,7 +123,7 @@ struct ContentView: View {
         }
     }
     
-    @MainActor func applyProcessing() {
+    func applyProcessing() {
         guard photosPickerItem != nil  else { return }
         
         setFilterValues()
